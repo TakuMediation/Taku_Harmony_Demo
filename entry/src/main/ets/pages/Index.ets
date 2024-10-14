@@ -1,4 +1,4 @@
-import { ATSDK, ATInitConfiguration } from 'anythink_sdk';
+import { ATSDK, ATInitConfiguration, ATCustomGroupConfig, CUSTOM_RULE_KEY } from 'anythink_sdk';
 import { router } from '@kit.ArkUI';
 import { PlacementIdBean } from '../viewmodel/PlacementIdBean';
 import { ToastUtil } from '../utils/ToastUtil';
@@ -17,10 +17,24 @@ struct Index {
       Button(this.bt_init)
         .height(36)
         .onClick(() => {
+          const customRuleMap: Record<string, Object> = {};
+          customRuleMap[CUSTOM_RULE_KEY.AGE] = "18";
+          customRuleMap[CUSTOM_RULE_KEY.GENDER] = "male";
+          customRuleMap[CUSTOM_RULE_KEY.CHANNEL] = "harmony";
+          //自定义规则
+          customRuleMap["type"] = "normal_wf";
+
+          const customGroupConfig: ATCustomGroupConfig = {
+            //广告位设置自定义规则，仅对当前Placement有效
+            placementCustomMap: { "b6704d32537317": customRuleMap },
+            //应用设置自定义规则，对全部广告位有效
+            // appCustomMap: customRuleMap
+          }
           let configuration: ATInitConfiguration = {
             appId: this.APP_ID,
             appKey: this.APP_KEY,
-            networkLogDebug: true
+            networkLogDebug: true,
+            customGroupConfig: customGroupConfig
           }
           // console.debug("init sdk start " + AGENT_EVENT_TYPE.INIT_CALLED.valueOf());
           ATSDK.init(getContext().getApplicationContext(), configuration)
@@ -29,28 +43,7 @@ struct Index {
             this.bt_init = 'init success';
             this.isInitSdkSucceed = true;
           })
-          // testDynImport();
         })
-
-      // Button('Huawei')
-      //   .height(36)
-      //   .onClick(() => {
-      //     if (!this.isInitSdkSucceed) {
-      //       ToastUtil.show('Please init sdk first.')
-      //       return
-      //     }
-      //     const placementIdBean = new PlacementIdBean();
-      //     placementIdBean.networkName = 'Huawei'
-      //     placementIdBean.interstitialPlacementId = 'huawei_id';
-      //     placementIdBean.rewardPlacementId = 'huawei_id';
-      //     placementIdBean.splashPlacementId = 'huawei_id';
-      //     placementIdBean.nativeExpressPlacementId = 'huawei_id';
-      //
-      //     router.pushUrl({
-      //       url: "pages/FullscreenAdPage",
-      //       params: { placementIdBean: placementIdBean }
-      //     })
-      //   }).margin({ top: 15 })
 
       Button('KuaiShou')
         .height(36)

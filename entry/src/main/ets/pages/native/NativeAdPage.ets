@@ -4,6 +4,8 @@ import { DataItem } from '../../viewmodel/DataItem';
 import { NativeAdItemComponent } from '../../view/NativeAdItemComponent';
 import { logMsg } from '../../utils/PrinLogUtil';
 import { router } from '@kit.ArkUI';
+import { IsAdReadyButton } from '../FullscreenAdPage';
+import { ToastUtil } from '../../utils/ToastUtil';
 
 /**
  * Description:自渲染测试页面
@@ -18,7 +20,7 @@ struct NativeAdPage {
   private readonly tag = 'NativeAdPage';
   private item?: DataItem;
   private placementId: string = '';
-
+  private atNativeAd?: ATNativeAd;
   @State hasAd: boolean = false;
   @State nativeAdType: string = "";
   @State adMsg: string = "";
@@ -31,22 +33,49 @@ struct NativeAdPage {
   build() {
     Column() {
       TitleComponent({ title: "测试原生广告" })
-      Button("加载广告")
-        .height(36)// .width('624px')
-        .margin({ top: '2%' })
-        .type(ButtonType.Capsule)
-        .onClick(() => {
-          this.requestAd();
-        })
+      Row() {
+        Button("Load Ad")
+          .height(36)// .width('624px')
+          .margin({ top: '2%' })
+          .type(ButtonType.Capsule)
+          .onClick(() => {
+            this.requestAd();
+          })
+        IsAdReadyButton({
+          isAdReadyFunc: () => {
+            const isAdReady = this.atNativeAd?.isAdReady();
+            this.adMsg = "ad ready status: " + isAdReady;
+          }
+        }).height(36)
+          .margin({ top: '2%', left: '2%' })
+      }
+
+      Row() {
+        Button("Show Ad")
+          .height(36)// .width('624px')
+          .margin({ top: '2%' })
+          .type(ButtonType.Capsule)
+          .onClick(() => {
+            this.showAd();
+          })
+        Button("Remove Ad")
+          .height(36)// .width('624px')
+          .margin({ top: '2%', left: '2%' })
+          .type(ButtonType.Capsule)
+          .onClick(() => {
+            this.hasAd = false;
+          })
+      }
+
       Text(`渲染方式：${this.nativeAdType}`)
         .fontSize("18fp")
         .fontColor($r('sys.color.black'))
         .textAlign(TextAlign.Start)
         .margin({ left: 20, top: 20 })
-      Text(`日志打印：${this.adMsg}`)
-        .fontSize("15fp")// .fontColor($r('sys.color.gray_01'))
-        .textAlign(TextAlign.Start)
-        .margin({ left: 20, top: 20 })
+      // Text(`日志打印：${this.adMsg}`)
+      //   .fontSize("15fp")// .fontColor($r('sys.color.gray_01'))
+      //   .textAlign(TextAlign.Start)
+      //   .margin({ left: 20, top: 20 })
       Divider()
         .margin({ top: 20, bottom: 20 })
       if (this.hasAd && this.item?.nativeAd) {
@@ -68,49 +97,11 @@ struct NativeAdPage {
     this.hasAd = false;
     const that = this;
     const atNativeAd = new ATNativeAd(this.placementId);
+    this.atNativeAd = atNativeAd;
     atNativeAd.setAdListener({
       onAdLoaded: (): void => {
-        const nativeAd = atNativeAd.getNativeAd();
-        nativeAd?.setNativeAdEventListener({
-          onAdShow: (adInfo: ATAdInfo): void => {
-            this.printLog("onAdShow() >>> ", adInfo);
-          },
-          onAdClose: (adInfo: ATAdInfo): void => {
-            this.printLog("onAdClose() >>> ", adInfo);
-          },
-          onAdClick: (adInfo: ATAdInfo): void => {
-            this.printLog("onAdClick() >>> ", adInfo);
-          },
-          onAdDislikeClick: (adInfo: ATAdInfo): void => {
-            this.printLog("onAdDislikeClick() >>> ", adInfo);
-          },
-          onAdVideoResume: (adInfo: ATAdInfo): void => {
-            this.printLog("onAdVideoResume() >>> ", adInfo);
-          },
-          onAdVideoPause: (adInfo: ATAdInfo): void => {
-            this.printLog("onAdVideoPause() >>> ", adInfo);
-          },
-          onAdVideoPlayStart: (adInfo: ATAdInfo): void => {
-            this.printLog("onAdVideoPlayStart() >>> ", adInfo);
-          },
-          onAdVideoPlayEnd: (adInfo: ATAdInfo): void => {
-            this.printLog("onAdVideoPlayEnd() >>> ", adInfo);
-          },
-          onAdVideoPlayFailed: (adError: ATAdError, adInfo?: ATAdInfo | undefined): void => {
-            this.printLog("onAdVideoPlayFailed() >>> ", adInfo, adError);
-          }
-        })
-
-        if (nativeAd?.isNativeExpress()) {
-          this.nativeAdType = "模板";
-        } else {
-          this.nativeAdType = "自渲染";
-        }
-
-        let dataItem = new DataItem();
-        dataItem.nativeAd = nativeAd;
-        that.item = dataItem;
-        that.hasAd = true;
+        this.printLog("onAdLoaded() >>> ");
+        this.showAd();
       },
       onAdLoadFailed: (adError: ATAdError): void => {
         this.printLog("onAdLoadFailed() >>> ", undefined, adError);
@@ -124,12 +115,63 @@ struct NativeAdPage {
     });
   }
 
+  private showAd() {
+    if (!this.atNativeAd) {
+      return;
+    }
+    const nativeAd = this.atNativeAd.getNativeAd();
+    if (!nativeAd) {
+      this.adMsg = "ad is not ready";
+      return;
+    }
+    nativeAd?.setNativeAdEventListener({
+      onAdShow: (adInfo: ATAdInfo): void => {
+        this.printLog("onAdShow() >>> ", adInfo);
+      },
+      onAdClose: (adInfo: ATAdInfo): void => {
+        this.printLog("onAdClose() >>> ", adInfo);
+      },
+      onAdClick: (adInfo: ATAdInfo): void => {
+        this.printLog("onAdClick() >>> ", adInfo);
+      },
+      onAdDislikeClick: (adInfo: ATAdInfo): void => {
+        this.printLog("onAdDislikeClick() >>> ", adInfo);
+      },
+      onAdVideoResume: (adInfo: ATAdInfo): void => {
+        this.printLog("onAdVideoResume() >>> ", adInfo);
+      },
+      onAdVideoPause: (adInfo: ATAdInfo): void => {
+        this.printLog("onAdVideoPause() >>> ", adInfo);
+      },
+      onAdVideoPlayStart: (adInfo: ATAdInfo): void => {
+        this.printLog("onAdVideoPlayStart() >>> ", adInfo);
+      },
+      onAdVideoPlayEnd: (adInfo: ATAdInfo): void => {
+        this.printLog("onAdVideoPlayEnd() >>> ", adInfo);
+      },
+      onAdVideoPlayFailed: (adError: ATAdError, adInfo?: ATAdInfo | undefined): void => {
+        this.printLog("onAdVideoPlayFailed() >>> ", adInfo, adError);
+      }
+    })
+
+    if (nativeAd?.isNativeExpress()) {
+      this.nativeAdType = "模板";
+    } else {
+      this.nativeAdType = "自渲染";
+    }
+    let dataItem = new DataItem();
+    dataItem.nativeAd = nativeAd;
+    this.item = dataItem;
+    this.hasAd = true;
+  }
+
   private printLog(msg: string, adInfo?: ATAdInfo, adError?: ATAdError) {
     if (adError) {
       this.adMsg = msg + formatAdError(adError);
     } else {
       this.adMsg = msg;
     }
+    ToastUtil.show(msg);
     logMsg(msg, adInfo, adError);
   }
 }
