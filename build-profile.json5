@@ -1,0 +1,55 @@
+{
+  "app": {
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "/Users/quinx/.ohos/config/default_anythink_sdk_demo_uhQmev6xs2hR5XfS7r2aHQ4vm_HmFX1hlesQLUgPFYc=.cer",
+          "storePassword": "0000001B5C37E016F5488538A3832331E12B10996E7A7D7FBA25FF092A58F44401BE8CC1E4FE4142CF3022",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001B4EB0A4E06197E5050ECFBAE187C2670A02B38BDA2D586015B8EC8CAF2059FBE8024A27D5A498EA",
+          "profile": "/Users/quinx/.ohos/config/default_anythink_sdk_demo_uhQmev6xs2hR5XfS7r2aHQ4vm_HmFX1hlesQLUgPFYc=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/quinx/.ohos/config/default_anythink_sdk_demo_uhQmev6xs2hR5XfS7r2aHQ4vm_HmFX1hlesQLUgPFYc=.p12"
+        }
+      }
+    ],
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+        "compatibleSdkVersion": "5.0.0(12)",
+        "runtimeOS": "HarmonyOS",
+        "buildOption": {
+          "strictMode": {
+            "caseSensitiveCheck": true,
+            "useNormalizedOHMUrl": true
+          }
+        }
+      }
+    ],
+    "buildModeSet": [
+      {
+        "name": "debug",
+      },
+      {
+        "name": "release"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
+  ]
+}
