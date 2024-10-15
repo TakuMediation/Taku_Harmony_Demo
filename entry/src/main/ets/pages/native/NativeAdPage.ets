@@ -23,7 +23,7 @@ struct NativeAdPage {
   private atNativeAd?: ATNativeAd;
   @State hasAd: boolean = false;
   @State nativeAdType: string = "";
-  @State adMsg: string = "";
+  // @State adMsg: string = "";
 
   aboutToAppear(): void {
     let record = router.getParams() as Record<string, string>;
@@ -44,7 +44,7 @@ struct NativeAdPage {
         IsAdReadyButton({
           isAdReadyFunc: () => {
             const isAdReady = this.atNativeAd?.isAdReady();
-            this.adMsg = "ad ready status: " + isAdReady;
+            this.printLog("ad ready status: " + isAdReady)
           }
         }).height(36)
           .margin({ top: '2%', left: '2%' })
@@ -117,11 +117,12 @@ struct NativeAdPage {
 
   private showAd() {
     if (!this.atNativeAd) {
+      this.printLog("ad is not ready.")
       return;
     }
     const nativeAd = this.atNativeAd.getNativeAd();
     if (!nativeAd) {
-      this.adMsg = "ad is not ready";
+      this.printLog("ad is not ready.")
       return;
     }
     nativeAd?.setNativeAdEventListener({
@@ -166,10 +167,11 @@ struct NativeAdPage {
   }
 
   private printLog(msg: string, adInfo?: ATAdInfo, adError?: ATAdError) {
+    let adMsg = '';
     if (adError) {
-      this.adMsg = msg + formatAdError(adError);
+      adMsg = msg + adError.toString();
     } else {
-      this.adMsg = msg;
+      adMsg = msg;
     }
     ToastUtil.show(msg);
     logMsg(msg, adInfo, adError);

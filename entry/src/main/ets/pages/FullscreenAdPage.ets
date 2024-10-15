@@ -203,7 +203,7 @@ struct FullscreenAdPage {
     rewardAd.setAdListener({
       onAdLoaded: (): void => {
         this.printLog("onAdLoaded() >>> ");
-        this.bt_reward = "展示激励";
+        this.bt_reward = "Show Reward";
       },
       onAdShow: (adInfo: ATAdInfo): void => {
         this.printLog("onAdShow() >>> ", adInfo);
@@ -252,7 +252,7 @@ struct FullscreenAdPage {
     interstitialAd.setAdListener({
       onAdLoaded: (): void => {
         this.printLog("onAdLoaded() >>> ");
-        this.bt_inter = '展示插屏';
+        this.bt_inter = 'Show Interstitial';
       },
       onAdShow: (adInfo: ATAdInfo): void => {
         this.printLog("onAdShow() >>> ", adInfo);

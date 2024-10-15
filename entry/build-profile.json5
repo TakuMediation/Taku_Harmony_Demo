@@ -3,11 +3,11 @@
   "buildOption": {
     "arkOptions": {
       "runtimeOnly": {
-        "packages": [
-          "anythink_sdk",
-          "anythink_network_ks",
-          "ksadsdk",
-        ]
+//        "packages": [
+//          "anythink_sdk",
+//          "anythink_network_ks",
+//          "ksadsdk",
+//        ]
       }
     }
   },

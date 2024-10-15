@@ -2,6 +2,9 @@
   "modelVersion": "5.0.0",
   "description": "Please describe the basic information.",
   "dependencies": {
+    'ksadsdk': 'file:./libs/KSAdSDK-3.0.0.har',
+    'anythink_network_ks': 'file:./libs/anythink_network_ks.har',
+    'anythink_sdk': 'file:./libs/anythink_sdk.har'
   },
   "devDependencies": {
     "@ohos/hypium": "1.0.19",

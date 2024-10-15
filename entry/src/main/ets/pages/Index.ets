@@ -34,7 +34,8 @@ struct Index {
             appId: this.APP_ID,
             appKey: this.APP_KEY,
             networkLogDebug: true,
-            customGroupConfig: customGroupConfig
+            customGroupConfig: customGroupConfig,
+            personalizedAdStatus: 1
           }
           // console.debug("init sdk start " + AGENT_EVENT_TYPE.INIT_CALLED.valueOf());
           ATSDK.init(getContext().getApplicationContext(), configuration)
