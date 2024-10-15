@@ -173,8 +173,8 @@ struct NativeAdPage {
     } else {
       adMsg = msg;
     }
-    ToastUtil.show(msg);
-    logMsg(msg, adInfo, adError);
+    ToastUtil.show(adMsg);
+    logMsg(adMsg, adInfo, adError);
   }
 }
 

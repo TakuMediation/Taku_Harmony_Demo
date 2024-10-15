@@ -296,6 +296,6 @@ struct FullscreenAdPage {
       message = msg;
     }
     ToastUtil.show(message);
-    logMsg(msg, adInfo, adError);
+    logMsg(message, adInfo, adError);
   }
 }
