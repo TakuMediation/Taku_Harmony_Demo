@@ -2,8 +2,9 @@
   "modelVersion": "5.0.0",
   "description": "Please describe the basic information.",
   "overrides": {
-    'ksadsdk': 'file:./libs/KSAdSDK-3.0.1.har',
-    'anythink_sdk': 'file:./libs/anythink_sdk.har'
+    'ksadsdk': 'file:./libs/KSAdSDK-3.0.3.har',
+    '@csj/openadsdk': 'file:./libs/openadsdk.har',
+    'anythink_sdk': 'file:./libs/anythink_sdk.har',
   },
   "devDependencies": {
     "@ohos/hypium": "1.0.19",

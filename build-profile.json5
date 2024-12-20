@@ -5,13 +5,13 @@
         "name": "default",
         "type": "HarmonyOS",
         "material": {
-          "certpath": "/Users/quinx/.ohos/config/default_anythink_sdk_demo_uhQmev6xs2hR5XfS7r2aHQ4vm_HmFX1hlesQLUgPFYc=.cer",
-          "storePassword": "0000001B5C37E016F5488538A3832331E12B10996E7A7D7FBA25FF092A58F44401BE8CC1E4FE4142CF3022",
+          "certpath": "/Users/quinx/.ohos/config/default_Taku_Harmony_Demo_pK-wRBFgSoo99XhqQBUdS_gx2u5x2BOg7PekywY8meQ=.cer",
+          "storePassword": "0000001BE1F914ED1F93288607D38CF07BF4CA9A024309E56D8E5BF983BE5C872EF87C218DA847DA6C5935",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001B4EB0A4E06197E5050ECFBAE187C2670A02B38BDA2D586015B8EC8CAF2059FBE8024A27D5A498EA",
-          "profile": "/Users/quinx/.ohos/config/default_anythink_sdk_demo_uhQmev6xs2hR5XfS7r2aHQ4vm_HmFX1hlesQLUgPFYc=.p7b",
+          "keyPassword": "0000001B00A5ED84F02C9E3F2F733EA115289E2620B07144C3693BA58984F1FF0ADE99C1385658858F8BFD",
+          "profile": "/Users/quinx/.ohos/config/default_Taku_Harmony_Demo_pK-wRBFgSoo99XhqQBUdS_gx2u5x2BOg7PekywY8meQ=.p7b",
           "signAlg": "SHA256withECDSA",
-          "storeFile": "/Users/quinx/.ohos/config/default_anythink_sdk_demo_uhQmev6xs2hR5XfS7r2aHQ4vm_HmFX1hlesQLUgPFYc=.p12"
+          "storeFile": "/Users/quinx/.ohos/config/default_Taku_Harmony_Demo_pK-wRBFgSoo99XhqQBUdS_gx2u5x2BOg7PekywY8meQ=.p12"
         }
       }
     ],

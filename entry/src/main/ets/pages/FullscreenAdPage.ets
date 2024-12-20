@@ -18,6 +18,7 @@ import { TitleComponent } from '../view/TitleComponent';
 import { common } from '@kit.AbilityKit';
 import { ATKSConfig } from 'anythink_network_ks';
 import { ToastUtil } from '../utils/ToastUtil';
+import { DemoConstants } from '../entryability/DemoConstants';
 
 @Component
 export struct IsAdReadyButton {
@@ -72,7 +73,9 @@ struct FullscreenAdPage {
     Column() {
       if (this.hasSplashAd) {
         Stack() {
-          BuildATSplashAdView(this.splashAd!)
+          BuildATSplashAdView(this.splashAd!, {
+            windowStage: DemoConstants.windowStage
+          })
         }.height('70%')
       } else {
         TitleComponent({ title: `测试${this.networkName}广告` })
@@ -233,7 +236,9 @@ struct FullscreenAdPage {
       }
     });
     if (rewardAd.isAdReady()) {
-      rewardAd.showAd();
+      rewardAd.showAd(getContext(), {
+        windowStage: DemoConstants.windowStage
+      });
       return;
     }
     const localExtraMap: Record<string, Object> = {};
@@ -279,7 +284,9 @@ struct FullscreenAdPage {
       }
     })
     if (interstitialAd.isAdReady()) {
-      interstitialAd.showAd(getContext());
+      interstitialAd.showAd(getContext(), {
+        windowStage: DemoConstants.windowStage
+      });
       return;
     }
     const localExtraMap: Record<string, Object> = {};

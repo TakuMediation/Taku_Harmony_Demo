@@ -23,7 +23,7 @@ struct NativeAdPage {
   private atNativeAd?: ATNativeAd;
   @State hasAd: boolean = false;
   @State nativeAdType: string = "";
-  // @State adMsg: string = "";
+  @State adMsg: string = "";
 
   aboutToAppear(): void {
     let record = router.getParams() as Record<string, string>;
@@ -56,6 +56,7 @@ struct NativeAdPage {
           .margin({ top: '2%' })
           .type(ButtonType.Capsule)
           .onClick(() => {
+            this.hasAd = false;
             this.showAd();
           })
         Button("Remove Ad")
@@ -72,10 +73,10 @@ struct NativeAdPage {
         .fontColor($r('sys.color.black'))
         .textAlign(TextAlign.Start)
         .margin({ left: 20, top: 20 })
-      // Text(`日志打印：${this.adMsg}`)
-      //   .fontSize("15fp")// .fontColor($r('sys.color.gray_01'))
-      //   .textAlign(TextAlign.Start)
-      //   .margin({ left: 20, top: 20 })
+      Text(`日志打印：${this.adMsg}`)
+        .fontSize("15fp")// .fontColor($r('sys.color.gray_01'))
+        .textAlign(TextAlign.Start)
+        .margin({ left: 20, top: 20 })
       Divider()
         .margin({ top: 20, bottom: 20 })
       if (this.hasAd && this.item?.nativeAd) {
@@ -101,7 +102,7 @@ struct NativeAdPage {
     atNativeAd.setAdListener({
       onAdLoaded: (): void => {
         this.printLog("onAdLoaded() >>> ");
-        this.showAd();
+        // this.showAd();
       },
       onAdLoadFailed: (adError: ATAdError): void => {
         this.printLog("onAdLoadFailed() >>> ", undefined, adError);
@@ -111,7 +112,8 @@ struct NativeAdPage {
       }
     });
     atNativeAd.loadAd({
-      context: getContext()
+      context: getContext(),
+      uiContext: this.getUIContext()
     });
   }
 
@@ -137,6 +139,7 @@ struct NativeAdPage {
       },
       onAdDislikeClick: (adInfo: ATAdInfo): void => {
         this.printLog("onAdDislikeClick() >>> ", adInfo);
+        this.hasAd = false;
       },
       onAdVideoResume: (adInfo: ATAdInfo): void => {
         this.printLog("onAdVideoResume() >>> ", adInfo);
@@ -173,6 +176,7 @@ struct NativeAdPage {
     } else {
       adMsg = msg;
     }
+    this.adMsg = adMsg;
     ToastUtil.show(adMsg);
     logMsg(adMsg, adInfo, adError);
   }

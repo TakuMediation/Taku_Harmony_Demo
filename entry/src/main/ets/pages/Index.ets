@@ -1,4 +1,4 @@
-import { ATSDK, ATInitConfiguration, ATCustomGroupConfig, CUSTOM_RULE_KEY } from 'anythink_sdk';
+import { ATSDK, ATInitConfiguration, ATCustomGroupConfig, AT_CUSTOM_RULE_KEY } from 'anythink_sdk';
 import { router } from '@kit.ArkUI';
 import { PlacementIdBean } from '../viewmodel/PlacementIdBean';
 import { ToastUtil } from '../utils/ToastUtil';
@@ -18,15 +18,15 @@ struct Index {
         .height(36)
         .onClick(() => {
           const customRuleMap: Record<string, Object> = {};
-          customRuleMap[CUSTOM_RULE_KEY.AGE] = "18";
-          customRuleMap[CUSTOM_RULE_KEY.GENDER] = "male";
-          customRuleMap[CUSTOM_RULE_KEY.CHANNEL] = "harmony";
+          customRuleMap[AT_CUSTOM_RULE_KEY.AGE] = "18";
+          customRuleMap[AT_CUSTOM_RULE_KEY.GENDER] = "male";
+          customRuleMap[AT_CUSTOM_RULE_KEY.CHANNEL] = "harmony";
           //自定义规则
           customRuleMap["type"] = "normal_wf";
 
           const customGroupConfig: ATCustomGroupConfig = {
             //广告位设置自定义规则，仅对当前Placement有效
-            placementCustomMap: { "b6704d32537317": customRuleMap },
+            // placementCustomMap: { "b6704d32537317": customRuleMap },
             //应用设置自定义规则，对全部广告位有效
             // appCustomMap: customRuleMap
           }
@@ -60,6 +60,27 @@ struct Index {
           placementIdBean.splashPlacementId = 'b6704d30c80e33';
           placementIdBean.nativeExpressPlacementId = 'b6704d3456fe53';
           placementIdBean.nativeSelfRenderPlacementId = 'b6704d2fa4b27c';
+
+          router.pushUrl({
+            url: "pages/FullscreenAdPage",
+            params: { placementIdBean: placementIdBean }
+          })
+        }).margin({ top: 15 })
+
+      Button('CSJ')
+        .height(36)
+        .onClick(() => {
+          if (!this.isInitSdkSucceed) {
+            ToastUtil.show('Please init sdk first.')
+            return
+          }
+          const placementIdBean = new PlacementIdBean();
+          placementIdBean.networkName = 'CSJ'
+          placementIdBean.interstitialPlacementId = 'b6760f377bdb2b';
+          placementIdBean.rewardPlacementId = 'b675addb71946f';
+          placementIdBean.splashPlacementId = 'b675add632fd96';
+          placementIdBean.nativeExpressPlacementId = 'b675adda1ecf4d';
+          placementIdBean.nativeSelfRenderPlacementId = 'b675ae1539999f';
 
           router.pushUrl({
             url: "pages/FullscreenAdPage",

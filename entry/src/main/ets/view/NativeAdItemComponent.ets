@@ -1,11 +1,18 @@
 import { DataItem } from '../viewmodel/DataItem';
 import { common } from '@kit.AbilityKit';
-import { ATAdChoiceType, ATAdInteractionType, ATMaterialType, ATNativeAdMaterial,BuildATNativeAdVideoView } from 'anythink_sdk';
+import { ATAdChoiceType, ATAdInteractionType, ATMaterialType, ATNativeAdMaterial,BuildATNativeAdVideoView,
+  NativeAd } from 'anythink_sdk';
+import { ATArrayList,ATNativePrepareInfo } from 'anythink_sdk';
+import { util } from '@kit.ArkTS';
 
 @Component
 export struct NativeAdItemComponent {
   private itemInfo: DataItem = new DataItem();
+  private nativeAd?: NativeAd;
   private nativeAdMaterial?: ATNativeAdMaterial;
+  private rootComponentId: string = util.generateRandomUUID();
+  private clickIds = new ATArrayList<string>();
+  private creativeIds = new ATArrayList<string>();
 
   getPadding() {
     console.log("NativeAd" + "native ad item call get padding");
@@ -20,11 +27,8 @@ export struct NativeAdItemComponent {
     console.log("NativeAd" + "about to recycle");
   }
 
-  getAdMaterial(): ATNativeAdMaterial {
-    return this.itemInfo.nativeAd?.getAdMaterial()!
-  }
-
   aboutToAppear(): void {
+    this.nativeAd = this.itemInfo.nativeAd;
     this.nativeAdMaterial = this.itemInfo.nativeAd?.getAdMaterial();
   }
 
@@ -43,6 +47,7 @@ export struct NativeAdItemComponent {
             // 点击转化
             this.nativeAdMaterial?.getClickHandler()(getContext(this) as common.UIAbilityContext, e);
           })
+          .id(this.clickIds.addAdId(util.generateRandomUUID()))
         if (this.nativeAdMaterial?.getAdMaterialType() == ATMaterialType.IMAGE ||
           this.nativeAdMaterial?.getAdMaterialType() == ATMaterialType.UNKNOWN) {
           // 展示图片
@@ -57,11 +62,12 @@ export struct NativeAdItemComponent {
                 // 点击转化
                 this.nativeAdMaterial?.getClickHandler()(getContext(this) as common.UIAbilityContext, e)
               })
+              .id(this.clickIds.addAdId(util.generateRandomUUID()))
           }
         } else {
           // 展示视频
           Column() {
-            BuildATNativeAdVideoView(this.itemInfo.nativeAd!);
+            BuildATNativeAdVideoView(this.nativeAd!);
           }
           .width("100%")
           .aspectRatio(1.78)
@@ -73,10 +79,12 @@ export struct NativeAdItemComponent {
             Image(this.nativeAdMaterial?.getAdChoiceUrl(ATAdChoiceType.NORMAL))
               .width('10vp')
               .height('10vp')
+              .id(this.clickIds.addAdId(util.generateRandomUUID()))
             Text(this.nativeAdMaterial?.getAdFrom())
               .margin({ left: '2vp' })
               .fontSize('10fp')
               .fontColor("#FFFFFF")
+              .id(this.clickIds.addAdId(util.generateRandomUUID()))
           }
           .height(14)
           .padding({ left: '2vp', right: '2vp' })
@@ -96,8 +104,9 @@ export struct NativeAdItemComponent {
               // 点击转化
               this.nativeAdMaterial?.getClickHandler()(getContext(this) as common.UIAbilityContext, e)
             })
+            .id(this.creativeIds.addAdId(util.generateRandomUUID()))
           // 号召按钮
-          Text(this.nativeAdMaterial?.getAdDesc())
+          Text(this.nativeAdMaterial?.getAdCallToActionText())
             .padding(2)
             .borderRadius(2)
             .maxLines(1)
@@ -108,6 +117,7 @@ export struct NativeAdItemComponent {
               // 点击转化
               this.nativeAdMaterial?.getClickHandler()(getContext(this) as common.UIAbilityContext, e)
             })
+            .id(this.creativeIds.addAdId(util.generateRandomUUID()))
         }
         .width("100%")
         .margin({ bottom: 10, top: 10 })
@@ -122,5 +132,12 @@ export struct NativeAdItemComponent {
     // 添加可见区域监听，SDK内部处理曝光逻辑
     .onVisibleAreaChange(this.nativeAdMaterial?.getVisibleAreaRatios(),
       this.nativeAdMaterial?.getVisibleAreaChangeListener())
+    .id(this.rootComponentId)
+    .onAppear(() => {
+      const prepareInfo = new ATNativePrepareInfo();
+      prepareInfo.clickViewIds = this.clickIds; //设置组件Id，需要全局保证唯一性，涉及计费
+      prepareInfo.creativeViewIds = this.creativeIds; //设置组件Id，需要全局保证唯一性，涉及计费
+      this.nativeAd?.prepare(this.rootComponentId, this.getUIContext(), prepareInfo);
+    })
   }
 }
