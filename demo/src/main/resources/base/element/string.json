@@ -1,0 +1,52 @@
+{
+  "string": [
+    {
+      "name": "app_name",
+      "value": "Taku Demo"
+    },
+    {
+      "name": "module_desc",
+      "value": "module description"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "Taku Demo"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "Taku Demo"
+    },
+    {
+      "name": "NativeAdPage_desc",
+      "value": "description"
+    },
+    {
+      "name": "NativeAdPage_label",
+      "value": "label"
+    },
+    {
+      "name": "request_network",
+      "value": "访问网络"
+    },
+    {
+      "name": "request_location",
+      "value": "访问位置"
+    },
+    {
+      "name": "request_network_info",
+      "value": "访问网络状态"
+    },
+    {
+      "name": "request_track",
+      "value": "访问广告标识"
+    },
+    {
+      "name": "request_sensor",
+      "value": "访问传感器"
+    },
+    {
+      "name": "request_vibrate",
+      "value": "振动"
+    }
+  ]
+}

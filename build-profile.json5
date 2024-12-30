@@ -40,8 +40,8 @@
   },
   "modules": [
     {
-      "name": "entry",
-      "srcPath": "./entry",
+      "name": "demo",
+      "srcPath": "./demo",
       "targets": [
         {
           "name": "default",

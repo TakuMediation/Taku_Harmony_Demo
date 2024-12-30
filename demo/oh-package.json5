@@ -1,0 +1,19 @@
+{
+  "name": "entry",
+  "version": "1.0.0",
+  "description": "Please describe the basic information.",
+  "main": "",
+  "author": "",
+  "license": "",
+  "dependencies": {
+    'ksadsdk': 'file:../libs/KSAdSDK-3.0.3.har',
+    '@csj/openadsdk': 'file:../libs/openadsdk.har',
+    '@gdt/gdt-union-sdk': 'file:../libs/GDTUnionSDK-default-release.har',
+    'anythink_sdk': 'file:../libs/anythink_sdk.har',
+    'anythink_network_ks': 'file:../libs/anythink_network_ks.har',
+    'anythink_network_csj': 'file:../libs/anythink_network_csj.har',
+    'anythink_network_gdt': 'file:../libs/anythink_network_gdt.har',
+    'anythink_network_huawei': 'file:../libs/anythink_network_huawei.har'
+  }
+}
+
