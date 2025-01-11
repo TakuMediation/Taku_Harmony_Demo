@@ -3,6 +3,7 @@
     "pages/Index",
     "pages/native/NativeAdPage",
     "pages/FullscreenAdPage",
-    "pages/banner/BannerAdPage"
+    "pages/banner/BannerAdPage",
+    "pages/NetworksAdPage"
   ]
 }

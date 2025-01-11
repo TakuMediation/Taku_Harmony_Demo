@@ -165,9 +165,8 @@ export struct NativeAdItemComponent {
       .alignItems(HorizontalAlign.Start)
     }.width("100%")
     // 添加可见区域监听，SDK内部处理曝光逻辑
-    .onVisibleAreaChange
-    (this.nativeAdMaterial?.getVisibleAreaRatios(), this.nativeAdMaterial?.getVisibleAreaChangeListener()).id
-    (this.rootComponentId)
+    .onVisibleAreaChange(this.nativeAdMaterial?.getVisibleAreaRatios(), this.nativeAdMaterial?.getVisibleAreaChangeListener())
+    .id(this.rootComponentId)
     .onAppear(() => {
       const prepareInfo = new ATNativePrepareInfo();
       prepareInfo.clickViewIds = this.clickIds; //设置组件Id，需要全局保证唯一性，涉及计费

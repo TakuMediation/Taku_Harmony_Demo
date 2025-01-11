@@ -86,7 +86,6 @@ struct FullscreenAdPage {
         if (this.INTERSTITIAL_PLACE_ID.length > 0) {
           Row() {
             Button(this.bt_inter)
-              .id('button')
               .height(36)
               .onClick(() => {
                 this.requestInterstitialAd();
@@ -97,8 +96,7 @@ struct FullscreenAdPage {
                 // this.message = "interstitial ad ready status: " + isAdReady;
                 this.printLog("interstitial ad ready status: " + isAdReady);
               }
-            }).height(36)
-              .margin({ left: '2%' })
+            }).margin({ left: '2%' })
           }
         }
         if (this.REWARD_PLACE_ID.length > 0) {
@@ -116,14 +114,12 @@ struct FullscreenAdPage {
                 // this.message = "reward ad ready status: " + isAdReady;
                 this.printLog("reward ad ready status: " + isAdReady);
               }
-            }).height(36)
-              .margin({ top: '2%', left: '2%' })
+            }).margin({ top: '2%', left: '2%' })
           }
         }
         if (this.SPLASH_PLACE_ID.length > 0) {
           Row() {
             Button(this.bt_splash)
-              .id('button')
               .height(36)
               .margin({ top: '2%' })
               .onClick((event) => {
@@ -135,13 +131,11 @@ struct FullscreenAdPage {
                 // this.message = "splash ad ready status: " + isAdReady;
                 this.printLog("splash ad ready status: " + isAdReady);
               }
-            }).height(36)
-              .margin({ top: '2%', left: '2%' })
+            }).margin({ top: '2%', left: '2%' })
           }
         }
         if (this.NATIVE_EXPRESS_PLACE_ID.length > 0) {
           Button('Load Native Express')
-            .id('button')
             .height(36)
             .margin({ top: '2%' })
             .onClick((event) => {
@@ -175,10 +169,8 @@ struct FullscreenAdPage {
         }
       }
       .width('100%')
-      .height('100%')
-      .margin({ left: '20%' })
+      .margin({ left: '20%', top: 20 })
       .alignItems(HorizontalAlign.Start)
-      .justifyContent(FlexAlign.Center)
     }
   }
 
