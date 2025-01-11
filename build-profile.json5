@@ -1,6 +1,19 @@
 {
   "app": {
     "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "/Users/quinx/.ohos/config/default_Taku_Harmony_Demo_pK-wRBFgSoo99XhqQBUdS_gx2u5x2BOg7PekywY8meQ=.cer",
+          "storePassword": "0000001BA8E93E225FB0C57978E283B8AD84345E85C260A49F09DC1E6C5CCFA802128F7CA834E3A74A5BAF",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001B543C2C4D3E1A11628F92AEA795E4AA8C913831FACBC3E51ECAB2D16AD2795AD08BC47EE418EBF6",
+          "profile": "/Users/quinx/.ohos/config/default_Taku_Harmony_Demo_pK-wRBFgSoo99XhqQBUdS_gx2u5x2BOg7PekywY8meQ=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/quinx/.ohos/config/default_Taku_Harmony_Demo_pK-wRBFgSoo99XhqQBUdS_gx2u5x2BOg7PekywY8meQ=.p12"
+        }
+      }
     ],
     "products": [
       {

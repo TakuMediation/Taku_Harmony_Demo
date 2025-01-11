@@ -7,12 +7,11 @@ import {
   ATDeviceInfo
 } from 'anythink_sdk';
 import { router } from '@kit.ArkUI';
-import { PlacementIdBean } from '../viewmodel/PlacementIdBean';
 import { ToastUtil } from '../utils/ToastUtil';
 import { abilityAccessCtrl, common } from '@kit.AbilityKit';
-import HiAdLog from 'anythink_network_huawei/src/main/ets/anythink/network/hw/HiAdLog';
 import { BusinessError } from '@kit.BasicServicesKit';
 import { CustomButton } from '../view/custom-button';
+import hilog from '@ohos.hilog';
 
 const TAG = "Anythink Ad Demo";
 
@@ -93,15 +92,15 @@ struct Index {
     try {
       atManager.requestPermissionsFromUser(context, ["ohos.permission.APP_TRACKING_CONSENT"]).then((data) => {
         if (data.authResults[0] == 0) {
-          HiAdLog.i(TAG, 'succeeded in requesting permission');
+          hilog.info(0, TAG, 'succeeded in requesting permission');
         } else {
-          HiAdLog.i(TAG, 'user rejected');
+          hilog.info(0, TAG, 'user rejected');
         }
       }).catch((err: BusinessError) => {
-        HiAdLog.e(TAG, `request permission failed, error: ${err.code} ${err.message}`);
+        hilog.error(0, TAG, `request permission failed, error: ${err.code} ${err.message}`);
       })
     } catch (err) {
-      HiAdLog.e(TAG, `catch err->${err.code}, ${err.message}`);
+      hilog.error(0, TAG, `catch err->${err.code}, ${err.message}`);
     }
   }
 }

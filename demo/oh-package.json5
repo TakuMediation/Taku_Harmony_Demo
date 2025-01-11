@@ -6,7 +6,7 @@
   "author": "",
   "license": "",
   "dependencies": {
-    'ksadsdk': 'file:../libs/KSAdSDK-3.0.3.har',
+    'ksadsdk': 'file:../libs/KSAdSDK-3.0.5.har',
     '@csj/openadsdk': 'file:../libs/openadsdk.har',
     '@gdt/gdt-union-sdk': 'file:../libs/GDTUnionSDK-default-release.har',
     'anythink_sdk': 'file:../libs/anythink_sdk.har',

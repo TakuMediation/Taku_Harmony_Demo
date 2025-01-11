@@ -50,7 +50,8 @@
         "usedScene": {
           "abilities": [
             "entry"
-          ]
+          ],
+          "when": "inuse"
         }
       }
     ]
