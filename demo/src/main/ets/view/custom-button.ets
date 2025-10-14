@@ -17,8 +17,8 @@
 @Component
 export struct CustomButton {
   @State mText: string | Resource = '';
-  private mHeight: number = 40;
-  private mOnClick: (event?: ClickEvent) => void = (): void => {};
+  mHeight: number = 40;
+  mOnClick: (event?: ClickEvent) => void = (): void => {};
 
   build() {
     Column() {
