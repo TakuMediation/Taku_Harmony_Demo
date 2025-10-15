@@ -1,26 +1,21 @@
 import { webview } from '@kit.ArkWeb';
-import { BusinessError } from '@kit.BasicServicesKit';
-import { ToastUtil } from '../utils/ToastUtil';
 
 @CustomDialog
 export struct PrivacyComponent {
+  // custom dialog
   controller: CustomDialogController = new CustomDialogController({
     builder: this
   });
-  // 同意回调函数
+  // set callback about agreement
   onAgree?: () => void;
-  // WebView控制器
+  // local webView controller
   private webviewController: webview.WebviewController = new webview.WebviewController();
-  // 隐私政策URL
+  // your privacy URL
   private privacyUrl: string = "https://www.takuad.com/privacy-policy";
-
-  // 显示对话框
-  aboutToAppear() {
-  }
 
   build() {
     Column() {
-      // WebView内容区域
+      // webView area
       Web({
         src: this.privacyUrl,
         controller: this.webviewController,
@@ -30,23 +25,23 @@ export struct PrivacyComponent {
         .cacheMode(CacheMode.Default)// 默认缓存模式
         .zoomAccess(true)
         .imageAccess(true)
-        .javaScriptAccess(true)// 允许JavaScript
-        .domStorageAccess(true)//开启文档对象模型存储接口
-        .databaseAccess(true)// 是否开启数据库存储API权限
-        .mixedMode(MixedMode.All)// 允许加载HTTP和HTTPS混合内容
-        .onlineImageAccess(true)
+        .javaScriptAccess(true)// enable JavaScript
+        .domStorageAccess(true)//enable storage access
+        .databaseAccess(true)// enable database access
+        .mixedMode(MixedMode.All)//  HTTP、HTTPS
+        .onlineImageAccess(true)// enable image access
         .backgroundColor('#FFFFFF')
         .onPageBegin((event) => {
-          console.log('开始加载页面: ' + event?.url);
+          console.log('onPageBegin: ' + event?.url);
         })
         .onPageEnd((event) => {
-          console.log('页面加载完成: ' + event?.url);
+          console.log('onPageEnd: ' + event?.url);
         })
         .onErrorReceive((event) => {
-          console.error('页面加载错误: ' + event?.error);
+          console.error('onErrorReceive: ' + event?.error);
         })
 
-      // 按钮区域
+      // button area
       Row() {
         Button('不同意', { type: ButtonType.Normal, stateEffect: true })
           .width(120)
@@ -90,15 +85,5 @@ export struct PrivacyComponent {
       offsetX: 0,
       offsetY: 8
     })
-  }
-
-  // 加载URL
-  private loadUrl() {
-    try {
-      this.webviewController.loadUrl(this.privacyUrl);
-    } catch (error) {
-      //const err: BusinessError = error as BusinessError;
-      //ToastUtil.show(`加载URL失败: ${err.code}, ${err.message}`)
-    }
   }
 }
