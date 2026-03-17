@@ -55,6 +55,7 @@ struct NetworksAdPage {
           placementIdBean.rewardPlacementId = 'b67073d53b0a44';
           placementIdBean.splashPlacementId = 'b67073dfd38c29';
           placementIdBean.nativeExpressPlacementId = 'b67073d84059f3';
+          placementIdBean.bannerPlacementId = 'b699ed171a76a4';
 
           router.pushUrl({
             url: "pages/FullscreenAdPage",
@@ -67,7 +68,11 @@ struct NetworksAdPage {
         mOnClick: () => {
           const placementIdBean = new PlacementIdBean();
           placementIdBean.networkName = 'GDT'
+          placementIdBean.splashPlacementId = 'b699fe3bde4b63';
           placementIdBean.rewardPlacementId = 'b677207424de34';
+          placementIdBean.interstitialPlacementId = 'b699feb5d29f65';
+          placementIdBean.bannerPlacementId = 'b699febaa5d1fa';
+          placementIdBean.nativeExpressPlacementId = 'b69a13c79b669a';
 
           router.pushUrl({
             url: "pages/FullscreenAdPage",

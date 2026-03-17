@@ -6,6 +6,7 @@ import { logMsg } from '../../utils/PrinLogUtil';
 import { router } from '@kit.ArkUI';
 import { IsAdReadyButton } from '../FullscreenAdPage';
 import { ToastUtil } from '../../utils/ToastUtil';
+import { DemoConstants } from '../../entryability/DemoConstants';
 
 /**
  * Description:自渲染测试页面
@@ -113,7 +114,8 @@ struct NativeAdPage {
     });
     atNativeAd.loadAd({
       context: getContext(),
-      uiContext: this.getUIContext()
+      uiContext: this.getUIContext(),
+      windowStage: DemoConstants.windowStage // set windowStage since 6.0.19
     });
   }
 

@@ -4,6 +4,7 @@
  **/
 import { router } from '@kit.ArkUI';
 import { ATAdError, ATAdInfo, ATBannerAd, BannerAd, BuildATBannerAdView, formatAdError } from 'anythink_sdk';
+import { DemoConstants } from '../../entryability/DemoConstants';
 import { logMsg } from '../../utils/PrinLogUtil';
 import { ToastUtil } from '../../utils/ToastUtil';
 import { TitleComponent } from '../../view/TitleComponent';
@@ -82,7 +83,8 @@ struct BannerAdPage {
     });
     atBannerAd.loadAd({
       context: getContext(),
-      uiContext: this.getUIContext()
+      uiContext: this.getUIContext(),
+      windowStage: DemoConstants.windowStage // set windowStage since 6.0.19
     })
   }
 

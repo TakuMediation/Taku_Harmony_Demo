@@ -5,6 +5,7 @@
 import {
   ATAdError,
   ATAdInfo,
+  ATAdStatus,
   ATInterstitialAd,
   ATRewardVideoAd,
   ATSplashAd,
@@ -16,9 +17,17 @@ import { logMsg } from '../utils/PrinLogUtil';
 import { PlacementIdBean } from '../viewmodel/PlacementIdBean';
 import { TitleComponent } from '../view/TitleComponent';
 import { common } from '@kit.AbilityKit';
-import { ATKSConfig } from 'anythink_network_ks';
 import { ToastUtil } from '../utils/ToastUtil';
 import { DemoConstants } from '../entryability/DemoConstants';
+
+@Builder
+function bottomViewBuilder() {
+  Text('Logo View')
+    .backgroundColor(Color.Yellow)
+    .width('100%')
+    .height('20%') // height <= 20%
+}
+let myBuilder: WrappedBuilder<[]> = wrapBuilder(bottomViewBuilder) // for GDT、CSJ
 
 @Component
 export struct IsAdReadyButton {
@@ -76,7 +85,8 @@ struct FullscreenAdPage {
       if (this.hasSplashAd) {
         Stack() {
           BuildATSplashAdView(this.splashAd!, {
-            windowStage: DemoConstants.windowStage
+            windowStage: DemoConstants.windowStage,
+            bottomViewBuilder: myBuilder // optional for GDT & CSJ, and set localExtraMap.AD_HEIGHT for CSJ
           })
         }.height('70%')
       } else {
@@ -205,13 +215,18 @@ struct FullscreenAdPage {
         this.printLog(`onAdLoadFailed() >>>`, undefined, adError);
       },
       onAdOtherStatus: (adInfo?: ATAdInfo | undefined): void => {
-        this.printLog("onAdOtherStatus() >>> ", adInfo);
+        this.hasSplashAd = false;
+        this.bt_splash = "Load Splash";
+        if (adInfo?.getAdStatusInfo()?.adStatus == ATAdStatus.SPLASH_SHOW_FAILED) {
+          this.hasSplashAd = false;
+          this.printLog("onAdOtherStatus() >>> SPLASH_SHOW_FAILED");
+        } else {
+          this.printLog("onAdOtherStatus() >>> ", adInfo);
+        }
       }
     });
     const localExtraMap: Record<string, Object> = {};
-    localExtraMap[ATKSConfig.VIDEO_SOUND_ENABLE_KEY] = false; //设置静音
-    localExtraMap[ATKSConfig.VIDEO_AUTO_PLAY_TYPE_KEY] = 3; //设置不自动播放
-
+    // localExtraMap[AT_LOCAL_EXTRA_KEY.AD_HEIGHT] = px2vp(display.getDefaultDisplaySync().height) * 0.8 // optional, set ad height when you want to show CSJ bottomView
     this.splashAd.loadAd({
       context: getContext(),
       fetchAdTimeout: 5000,
@@ -261,8 +276,6 @@ struct FullscreenAdPage {
       return;
     }
     const localExtraMap: Record<string, Object> = {};
-    localExtraMap[ATKSConfig.VIDEO_SOUND_ENABLE_KEY] = false; //设置静音
-    localExtraMap[ATKSConfig.VIDEO_AUTO_PLAY_TYPE_KEY] = 3; //设置不自动播放
 
     rewardAd.loadAd({
       context: getContext(),
@@ -309,8 +322,6 @@ struct FullscreenAdPage {
       return;
     }
     const localExtraMap: Record<string, Object> = {};
-    localExtraMap[ATKSConfig.VIDEO_SOUND_ENABLE_KEY] = false; //设置静音
-    localExtraMap[ATKSConfig.VIDEO_AUTO_PLAY_TYPE_KEY] = 3; //设置不自动播放
     interstitialAd.loadAd({ context: getContext(), localExtraMap: localExtraMap });
   }
 
