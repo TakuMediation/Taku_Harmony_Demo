@@ -9,6 +9,7 @@ import {
   ATInterstitialAd,
   ATRewardVideoAd,
   ATSplashAd,
+  AT_LOCAL_EXTRA_KEY,
   BuildATSplashAdView,
   formatAdError
 } from 'anythink_sdk';
@@ -19,6 +20,7 @@ import { TitleComponent } from '../view/TitleComponent';
 import { common } from '@kit.AbilityKit';
 import { ToastUtil } from '../utils/ToastUtil';
 import { DemoConstants } from '../entryability/DemoConstants';
+import { ATTTConfig } from 'anythink_network_csj';
 
 @Builder
 function bottomViewBuilder() {
@@ -226,10 +228,12 @@ struct FullscreenAdPage {
       }
     });
     const localExtraMap: Record<string, Object> = {};
-    // localExtraMap[AT_LOCAL_EXTRA_KEY.AD_HEIGHT] = px2vp(display.getDefaultDisplaySync().height) * 0.8 // optional, set ad height when you want to show CSJ bottomView
+    // optional, set ad height when you want to show CSJ bottomView
+    // localExtraMap[AT_LOCAL_EXTRA_KEY.AD_HEIGHT] = px2vp(display.getDefaultDisplaySync().height) * 0.8
     this.splashAd.loadAd({
       context: getContext(),
       fetchAdTimeout: 5000,
+      uiContext: this.getUIContext(), // since 6.0.20
       localExtraMap: localExtraMap,
     });
   }
@@ -276,7 +280,10 @@ struct FullscreenAdPage {
       return;
     }
     const localExtraMap: Record<string, Object> = {};
-
+    // Pangolin Transparent Parameters: Only supports a single JSON object format; nested JSON objects are not allowed
+    localExtraMap[ATTTConfig.MEDIA_EXTRA_KEY] = '{"a":"123","b":1}';
+    // For ad sources such as Kwai, Huawei, GDT, and others, as well as ATSDK s2s_reward callback URL parameters, if the format remains JSON, only USER_CUSTOM_DATA can be transmitted
+    localExtraMap[AT_LOCAL_EXTRA_KEY.USER_CUSTOM_DATA] = 'your extra info';
     rewardAd.loadAd({
       context: getContext(),
       localExtraMap: localExtraMap

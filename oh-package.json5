@@ -2,8 +2,8 @@
   "modelVersion": "5.0.0",
   "description": "Please describe the basic information.",
   "overrides": {
-    'ksadsdk': 'file:./libs/KSAdSDK-3.0.5.har',
-    '@csj/openadsdk': 'file:./libs/openadsdk.har',
+    'ksadsdk': 'file:./libs/KSAdSDK-3.0.10.har',
+    '@csj/openadsdk': 'file:./libs/openadsdk_7.5.4.har',
     '@gdt/gdt-union-sdk': 'file:./libs/GDTUnionSDK-default-release.har',
     'anythink_sdk': 'file:./libs/anythink_sdk.har'
   },
