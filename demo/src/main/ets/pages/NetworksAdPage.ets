@@ -80,6 +80,24 @@ struct NetworksAdPage {
           })
         }
       })
+      CustomButton({
+        mText: "GroMore", // kill progress and test GroMore after test csj because of diff appid
+        mOnClick: () => {
+          const placementIdBean = new PlacementIdBean();
+          placementIdBean.networkName = 'GroMore'
+          placementIdBean.rewardPlacementId = 'b6ab499eba0ede';
+          placementIdBean.interstitialPlacementId = 'b6ab49a6646942';
+          placementIdBean.splashPlacementId = 'b6ab49a119e8a3';
+          placementIdBean.bannerPlacementId = 'b6ab49a2627509';
+          placementIdBean.nativeExpressPlacementId = 'b6ab49abf810ac';
+          placementIdBean.nativeSelfRenderPlacementId = 'b6ab49a95f2b53';
+
+          router.pushUrl({
+            url: "pages/FullscreenAdPage",
+            params: { placementIdBean: placementIdBean }
+          })
+        }
+      })
     }
     .height('100%')
     .width('100%')

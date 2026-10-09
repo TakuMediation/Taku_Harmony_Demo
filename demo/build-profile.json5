@@ -3,11 +3,15 @@
   "buildOption": {
     "arkOptions": {
       "runtimeOnly": {
+        //【Dynamic Import packages】, otherwise sys cannot find module
         "packages": [
           "anythink_network_ks",
           "anythink_network_csj",
           "anythink_network_gdt",
           "anythink_network_huawei",
+          "anythink_network_gromore",
+          "@csj/adapter_gdt",
+          "@csj/adapter_ks"
         ]
       }
     }

@@ -3,11 +3,18 @@
  * Created by Quin on 2024/12/24
  **/
 import { router } from '@kit.ArkUI';
-import { ATAdError, ATAdInfo, ATBannerAd, BannerAd, BuildATBannerAdView, formatAdError } from 'anythink_sdk';
-import { DemoConstants } from '../../entryability/DemoConstants';
+import {
+  ATAdError,
+  ATAdInfo,
+  ATBannerAd,
+  BannerAd,
+  BuildATBannerAdView,
+  formatAdError
+} from 'anythink_sdk';
 import { logMsg } from '../../utils/PrinLogUtil';
 import { ToastUtil } from '../../utils/ToastUtil';
 import { TitleComponent } from '../../view/TitleComponent';
+import { DemoConstants } from '../../entryability/DemoConstants';
 
 @Entry
 @Component
@@ -58,6 +65,9 @@ struct BannerAdPage {
           onAdClose: (adInfo: ATAdInfo): void => {
             this.printLog("onAdClose() >>> ", adInfo);
             this.hasAd = false;
+          },
+          onAdFailed: (adError: ATAdError): void => {
+            this.printLog("onBannerFailed() >>> ", undefined, adError); // since v6.0.17
           },
           onAdAutoRefreshed: (adInfo: ATAdInfo): void => {
             this.printLog("onBannerAutoRefreshed() >>> ", adInfo);

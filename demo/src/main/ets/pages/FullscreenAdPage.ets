@@ -13,11 +13,12 @@ import {
   BuildATSplashAdView,
   formatAdError
 } from 'anythink_sdk';
-import { router } from '@kit.ArkUI';
+import { display, router } from '@kit.ArkUI';
 import { logMsg } from '../utils/PrinLogUtil';
 import { PlacementIdBean } from '../viewmodel/PlacementIdBean';
 import { TitleComponent } from '../view/TitleComponent';
 import { common } from '@kit.AbilityKit';
+import { ATKSConfig } from 'anythink_network_ks';
 import { ToastUtil } from '../utils/ToastUtil';
 import { DemoConstants } from '../entryability/DemoConstants';
 import { ATTTConfig } from 'anythink_network_csj';
@@ -27,9 +28,11 @@ function bottomViewBuilder() {
   Text('Logo View')
     .backgroundColor(Color.Yellow)
     .width('100%')
-    .height('20%') // height <= 20%
+    .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.BOTTOM]) // expand to bottom sys area
+    .height('20%') // // height <= 20%
+
 }
-let myBuilder: WrappedBuilder<[]> = wrapBuilder(bottomViewBuilder) // for GDT、CSJ
+let myBuilder: WrappedBuilder<[]> = wrapBuilder(bottomViewBuilder) // CSJ / GDT / HW / KS
 
 @Component
 export struct IsAdReadyButton {
@@ -48,17 +51,35 @@ export struct IsAdReadyButton {
   }
 }
 
+@Component
+export struct adShowButton {
+  adShowFunc?: () => void;
+
+  build() {
+    Stack() {
+      Button('Show')
+        .height(36)
+        .onClick(() => {
+          if (this.adShowFunc) {
+            this.adShowFunc()
+          }
+        })
+    }
+  }
+}
+
 @Entry
 @Component
 struct FullscreenAdPage {
   private uiAbilityContext: common.UIAbilityContext = getContext(this) as common.UIAbilityContext;
   // @State message: string = 'ad log';
-  @State bt_inter: string = 'Load Interstitial';
-  @State bt_reward: string = 'Load Reward';
-  @State bt_splash: string = 'Load Splash';
-  @State bt_native: string = 'Load Native';
-  @State bt_banner: string = 'Load Banner';
+  private readonly BT_INTER: string = 'Load Interstitial';
+  private readonly BT_REWARD: string = 'Load Reward';
+  private readonly BT_SPLASH: string = 'Load Splash';
+  private readonly BT_NATIVE: string = 'Load Native';
+  private readonly BT_BANNER: string = 'Load Banner';
   @State hasSplashAd: boolean = false;
+  private splashShowLocalExtra: Record<string, Object> = {};
   private SPLASH_PLACE_ID: string = '';
   private REWARD_PLACE_ID: string = '';
   private INTERSTITIAL_PLACE_ID: string = '';
@@ -88,116 +109,124 @@ struct FullscreenAdPage {
         Stack() {
           BuildATSplashAdView(this.splashAd!, {
             windowStage: DemoConstants.windowStage,
-            bottomViewBuilder: myBuilder // optional for GDT & CSJ, and set localExtraMap.AD_HEIGHT for CSJ
+            // since v6.3.40: optional builder for all ads, and 【should set localExtraMap.AD_HEIGHT for CSJ】
+            bottomViewBuilder: myBuilder,
+            localExtraMap: this.splashShowLocalExtra
           })
-        }.height('70%')
+        }
+        .width('100%')
+        .height('100%')
       } else {
         TitleComponent({ title: `测试${this.networkName}广告` })
-      }
-      Column() {
-        if (this.INTERSTITIAL_PLACE_ID.length > 0) {
-          Row() {
-            Button(this.bt_inter)
-              .height(36)
-              .onClick(() => {
-                this.requestInterstitialAd();
-              })
-            IsAdReadyButton({
-              isAdReadyFunc: () => {
-                const isAdReady = this.interstitialAd?.isAdReady() ?? false;
-                // this.message = "interstitial ad ready status: " + isAdReady;
-                this.printLog("interstitial ad ready status: " + isAdReady);
-              }
-            }).margin({ left: '2%' })
+        Column() {
+          if (this.INTERSTITIAL_PLACE_ID.length > 0) {
+            Row() {
+              Button(this.BT_INTER)
+                .height(36)
+                .onClick(() => {
+                  this.requestInterstitialAd();
+                })
+              IsAdReadyButton({
+                isAdReadyFunc: () => {
+                  const isAdReady = this.interstitialAd?.isAdReady() ?? false;
+                  this.printLog("interstitial ad ready status: " + isAdReady);
+                }
+              }).margin({ left: '2%' })
+              adShowButton({
+                adShowFunc: (): void => this.showInterstitialAd()
+              }).margin({ left: '2%' })
+            }
           }
-        }
-        if (this.REWARD_PLACE_ID.length > 0) {
-          Row() {
-            Button(this.bt_reward)
-              .height(36)// .width('624px')
-              .margin({ top: '2%' })
-              .type(ButtonType.Capsule)
-              .onClick(() => {
-                this.requestRewardAd();
-              })
-            IsAdReadyButton({
-              isAdReadyFunc: () => {
-                const isAdReady = this.rewardAd?.isAdReady() ?? false;
-                // this.message = "reward ad ready status: " + isAdReady;
-                this.printLog("reward ad ready status: " + isAdReady);
-              }
-            }).margin({ top: '2%', left: '2%' })
+          if (this.REWARD_PLACE_ID.length > 0) {
+            Row() {
+              Button(this.BT_REWARD)
+                .height(36)
+                .margin({ top: '2%' })
+                .type(ButtonType.Capsule)
+                .onClick(() => {
+                  this.requestRewardAd();
+                })
+              IsAdReadyButton({
+                isAdReadyFunc: () => {
+                  const isAdReady = this.rewardAd?.isAdReady() ?? false;
+                  this.printLog("reward ad ready status: " + isAdReady);
+                }
+              }).margin({ top: '2%', left: '2%' })
+              adShowButton({
+                adShowFunc: (): void => this.showRewardAd()
+              }).margin({ top: '2%', left: '2%' })
+            }
           }
-        }
-        if (this.SPLASH_PLACE_ID.length > 0) {
-          Row() {
-            Button(this.bt_splash)
+          if (this.SPLASH_PLACE_ID.length > 0) {
+            Row() {
+              Button(this.BT_SPLASH)
+                .height(36)
+                .margin({ top: '2%' })
+                .onClick(() => {
+                  this.requestSplashAd();
+                })
+              IsAdReadyButton({
+                isAdReadyFunc: () => {
+                  const isAdReady = this.splashAd?.isAdReady() ?? false;
+                  this.printLog("splash ad ready status: " + isAdReady);
+                }
+              }).margin({ top: '2%', left: '2%' })
+              adShowButton({
+                adShowFunc: (): void => this.showSplashAd()
+              }).margin({ top: '2%', left: '2%' })
+            }
+          }
+          if (this.NATIVE_EXPRESS_PLACE_ID.length > 0) {
+            Button(this.BT_NATIVE + ' Express')
               .height(36)
               .margin({ top: '2%' })
               .onClick((event) => {
-                this.requestSplashAd();
+                router.pushUrl({
+                  url: "pages/native/NativeAdPage",
+                  params: { placementId: this.NATIVE_EXPRESS_PLACE_ID }
+                })
               })
-            IsAdReadyButton({
-              isAdReadyFunc: () => {
-                const isAdReady = this.splashAd?.isAdReady() ?? false;
-                // this.message = "splash ad ready status: " + isAdReady;
-                this.printLog("splash ad ready status: " + isAdReady);
-              }
-            }).margin({ top: '2%', left: '2%' })
+          }
+          if (this.NATIVE_SELF_RENDER_PLACE_ID.length > 0) {
+            Button(this.BT_NATIVE + ' SelfRender')
+              .height(36)
+              .margin({ top: '2%' })
+              .onClick((e) => {
+                router.pushUrl({
+                  url: "pages/native/NativeAdPage",
+                  params: { placementId: this.NATIVE_SELF_RENDER_PLACE_ID }
+                })
+              })
+          }
+          if (this.BANNER_PLACE_ID.length > 0) {
+            Button(this.BT_BANNER)
+              .height(36)
+              .margin({ top: '2%' })
+              .onClick((e) => {
+                router.pushUrl({
+                  url: "pages/banner/BannerAdPage",
+                  params: { placementId: this.BANNER_PLACE_ID }
+                })
+              })
           }
         }
-        if (this.NATIVE_EXPRESS_PLACE_ID.length > 0) {
-          Button('Load Native Express')
-            .height(36)
-            .margin({ top: '2%' })
-            .onClick((event) => {
-              router.pushUrl({
-                url: "pages/native/NativeAdPage",
-                params: { placementId: this.NATIVE_EXPRESS_PLACE_ID }
-              })
-            })
-        }
-        if (this.NATIVE_SELF_RENDER_PLACE_ID.length > 0) {
-          Button('Load Native SelfRender')
-            .height(36)
-            .margin({ top: '2%' })
-            .onClick((e) => {
-              router.pushUrl({
-                url: "pages/native/NativeAdPage",
-                params: { placementId: this.NATIVE_SELF_RENDER_PLACE_ID }
-              })
-            })
-        }
-        if (this.BANNER_PLACE_ID.length > 0) {
-          Button('Load Banner')
-            .height(36)
-            .margin({ top: '2%' })
-            .onClick((e) => {
-              router.pushUrl({
-                url: "pages/banner/BannerAdPage",
-                params: { placementId: this.BANNER_PLACE_ID }
-              })
-            })
-        }
+        .width('100%')
+        .margin({ left: '8%', top: 20 })
+        .alignItems(HorizontalAlign.Start)
       }
-      .width('100%')
-      .margin({ left: '20%', top: 20 })
-      .alignItems(HorizontalAlign.Start)
     }
+    .width('100%')
+    .height('100%')
   }
 
   requestSplashAd() {
     if (this.splashAd?.isAdReady()) {
-      this.hasSplashAd = true;
       return;
     }
-    this.bt_splash = "Load Splash";
     this.splashAd = new ATSplashAd(this.SPLASH_PLACE_ID);
     this.splashAd.setAdListener({
       onAdLoaded: (isTimeout: boolean): void => {
         this.printLog("onAdLoaded() >>> isTimeout: " + isTimeout);
-        // this.hasSplashAd = true;
-        this.bt_splash = "Show Splash";
       },
       onAdShow: (adInfo: ATAdInfo): void => {
         this.printLog("onAdShow() >>> ", adInfo);
@@ -208,17 +237,15 @@ struct FullscreenAdPage {
       onAdClose: (adInfo: ATAdInfo): void => {
         this.hasSplashAd = false;
         this.printLog("onAdClose() >>> ", adInfo);
-        this.bt_splash = "Load Splash";
       },
       onAdLoadTimeout: (): void => {
         this.printLog("onAdLoadTimeout() >>> ");
       },
       onAdLoadFailed: (adError: ATAdError): void => {
+        console.log(`==开屏广告加载错误: ${formatAdError(adError)}`);
         this.printLog(`onAdLoadFailed() >>>`, undefined, adError);
       },
       onAdOtherStatus: (adInfo?: ATAdInfo | undefined): void => {
-        this.hasSplashAd = false;
-        this.bt_splash = "Load Splash";
         if (adInfo?.getAdStatusInfo()?.adStatus == ATAdStatus.SPLASH_SHOW_FAILED) {
           this.hasSplashAd = false;
           this.printLog("onAdOtherStatus() >>> SPLASH_SHOW_FAILED");
@@ -228,12 +255,12 @@ struct FullscreenAdPage {
       }
     });
     const localExtraMap: Record<string, Object> = {};
-    // optional, set ad height when you want to show CSJ bottomView
-    // localExtraMap[AT_LOCAL_EXTRA_KEY.AD_HEIGHT] = px2vp(display.getDefaultDisplaySync().height) * 0.8
+    // optional, 【set ad height when you want to show CSJ bottomView】
+    localExtraMap[AT_LOCAL_EXTRA_KEY.AD_HEIGHT] = px2vp(display.getDefaultDisplaySync().height) * 0.8
     this.splashAd.loadAd({
       context: getContext(),
-      fetchAdTimeout: 5000,
       uiContext: this.getUIContext(), // since 6.0.20
+      fetchAdTimeout: 5000,
       localExtraMap: localExtraMap,
     });
   }
@@ -244,11 +271,9 @@ struct FullscreenAdPage {
     rewardAd.setAdListener({
       onAdLoaded: (): void => {
         this.printLog("onAdLoaded() >>> ");
-        this.bt_reward = "Show Reward";
       },
       onAdShow: (adInfo: ATAdInfo): void => {
         this.printLog("onAdShow() >>> ", adInfo);
-        this.bt_reward = "Load Reward";
       },
       onAdClick: (adInfo: ATAdInfo): void => {
         this.printLog("onAdClick() >>> ", adInfo);
@@ -270,20 +295,12 @@ struct FullscreenAdPage {
       },
       onAdVideoPlayFailed: (adError: ATAdError, adInfo?: ATAdInfo | undefined): void => {
         this.printLog(`onAdVideoPlayFailed() >>> `, adInfo, adError);
-        this.bt_reward = "Load Reward";
       }
     });
-    if (rewardAd.isAdReady()) {
-      rewardAd.showAd(getContext(), {
-        windowStage: DemoConstants.windowStage
-      });
-      return;
-    }
     const localExtraMap: Record<string, Object> = {};
-    // Pangolin Transparent Parameters: Only supports a single JSON object format; nested JSON objects are not allowed
-    localExtraMap[ATTTConfig.MEDIA_EXTRA_KEY] = '{"a":"123","b":1}';
-    // For ad sources such as Kwai, Huawei, GDT, and others, as well as ATSDK s2s_reward callback URL parameters, if the format remains JSON, only USER_CUSTOM_DATA can be transmitted
-    localExtraMap[AT_LOCAL_EXTRA_KEY.USER_CUSTOM_DATA] = 'your extra info';
+    localExtraMap[AT_LOCAL_EXTRA_KEY.USER_ID] = "your user id";
+    localExtraMap[ATTTConfig.MEDIA_EXTRA_KEY] = '{"order_id":"123","level":1}'; // single json for cjs【USER_CUSTOM_DATA value】
+    localExtraMap[AT_LOCAL_EXTRA_KEY.USER_CUSTOM_DATA] = 'my_extra_info'; // other adn 【USER_CUSTOM_DATA value】
     rewardAd.loadAd({
       context: getContext(),
       localExtraMap: localExtraMap
@@ -296,11 +313,9 @@ struct FullscreenAdPage {
     interstitialAd.setAdListener({
       onAdLoaded: (): void => {
         this.printLog("onAdLoaded() >>> ");
-        this.bt_inter = 'Show Interstitial';
       },
       onAdShow: (adInfo: ATAdInfo): void => {
         this.printLog("onAdShow() >>> ", adInfo);
-        this.bt_inter = 'Load Interstitial';
       },
       onAdClick: (adInfo: ATAdInfo): void => {
         this.printLog("onAdClick() >>> ", adInfo);
@@ -319,17 +334,47 @@ struct FullscreenAdPage {
       },
       onAdVideoPlayFailed: (adError: ATAdError, adInfo?: ATAdInfo): void => {
         this.printLog(`onAdVideoPlayFailed() >>> `, adInfo, adError);
-        this.bt_inter = 'Load Interstitial';
       }
-    })
-    if (interstitialAd.isAdReady()) {
-      interstitialAd.showAd(getContext(), {
-        windowStage: DemoConstants.windowStage
-      });
-      return;
-    }
+    });
     const localExtraMap: Record<string, Object> = {};
     interstitialAd.loadAd({ context: getContext(), localExtraMap: localExtraMap });
+  }
+
+  private showInterstitialAd() {
+    if (this.interstitialAd?.isAdReady()) {
+      const localExtraMap: Record<string, Object> = {};
+      localExtraMap[AT_LOCAL_EXTRA_KEY.SHOW_CUSTOM_EXT] = 'demo_inter_show_ext';
+      this.interstitialAd.showAd(getContext(), {
+        windowStage: DemoConstants.windowStage,
+        localExtraMap: localExtraMap
+      });
+    } else {
+      this.printLog("interstitial ad not ready");
+    }
+  }
+
+  private showRewardAd() {
+    if (this.rewardAd?.isAdReady()) {
+      const localExtraMap: Record<string, Object> = {};
+      localExtraMap[AT_LOCAL_EXTRA_KEY.SHOW_CUSTOM_EXT] = 'demo_reward_show_ext';
+      this.rewardAd.showAd(getContext(), {
+        windowStage: DemoConstants.windowStage,
+        localExtraMap: localExtraMap
+      });
+    } else {
+      this.printLog("reward ad not ready");
+    }
+  }
+
+  private showSplashAd() {
+    if (this.splashAd?.isAdReady()) {
+      const localExtraMap: Record<string, Object> = {};
+      localExtraMap[AT_LOCAL_EXTRA_KEY.SHOW_CUSTOM_EXT] = 'demo_splash_show_ext';
+      this.splashShowLocalExtra = localExtraMap;
+      this.hasSplashAd = true;
+    } else {
+      this.printLog("splash ad not ready");
+    }
   }
 
   private printLog(msg: string, adInfo?: ATAdInfo, adError?: ATAdError) {

@@ -2,8 +2,10 @@
   "modelVersion": "5.0.0",
   "description": "Please describe the basic information.",
   "overrides": {
-    'ksadsdk': 'file:./libs/KSAdSDK-3.0.10.har',
-    '@csj/openadsdk': 'file:./libs/openadsdk_7.5.4.har',
+    'ksadsdk': 'file:./libs/KSAdSDK-3.0.10.har', // use 3.0.6 if you want gromore ks-adn
+    '@csj/openadsdk': 'file:./libs/openadsdk_7.6.5.har',
+    '@csj/adapter_gdt': 'file:./libs/gromore_adapter_gdt_1.2.0-3.har',
+    '@csj/adapter_ks': 'file:./libs/gromore_adapter_ks_3.0.6-7.har',
     '@gdt/gdt-union-sdk': 'file:./libs/GDTUnionSDK-default-release.har',
     'anythink_sdk': 'file:./libs/anythink_sdk.har'
   },
